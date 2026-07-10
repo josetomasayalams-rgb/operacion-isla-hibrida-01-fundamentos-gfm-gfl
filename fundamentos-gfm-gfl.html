@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Simulación educativa de los objetivos de control GFM y GFL en redes fuertes y débiles.">
+  <title>Fundamentos GFM/GFL · Academia de operación en isla</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="site-shell">
+    <header class="site-header">
+      <div>
+        <p class="eyebrow">Módulo 01 · Fundamentos</p>
+        <h1>Formar la referencia no es seguirla</h1>
+        <p class="lede">Un GFM intenta sostener un fasor interno de tensión; un GFL regula un fasor de corriente sincronizado mediante una referencia externa. Perturba la red y observa cómo cambian frecuencia, ángulo y límite de corriente.</p>
+      </div>
+      <div class="header-meta">
+        <strong>Modelo reducido educativo <span class="evidence-tag">E</span></strong>
+        No reemplaza EMT ni<br>
+        parámetros OEM
+      </div>
+    </header>
+
+    <section class="control-panel" aria-labelledby="controls-heading">
+      <h2 id="controls-heading" class="sr-only">Parámetros de simulación</h2>
+      <div class="control-row">
+        <div class="field">
+          <label for="scr"><span>Fortaleza de red, SCR</span><output id="scr-value" for="scr">5,0</output></label>
+          <input id="scr" type="range" min="1" max="20" step="0.5" value="5">
+        </div>
+        <div class="field">
+          <label for="step"><span>Escalón de carga</span><output id="step-value" for="step">25 %</output></label>
+          <input id="step" type="range" min="5" max="60" step="5" value="25">
+        </div>
+        <div class="field">
+          <label for="inertia"><span>Inercia virtual H</span><output id="inertia-value" for="inertia">3,0 s</output></label>
+          <input id="inertia" type="range" min="0.5" max="8" step="0.5" value="3">
+        </div>
+        <div class="field">
+          <label for="current-limit"><span>Límite de corriente</span><output id="current-limit-value" for="current-limit">1,20 pu</output></label>
+          <input id="current-limit" type="range" min="1.05" max="2" step="0.05" value="1.2">
+        </div>
+        <button class="btn btn-primary" id="simulate" type="button">Simular evento</button>
+      </div>
+    </section>
+
+    <section class="metric-row" aria-label="Resultados principales">
+      <div class="metric">
+        <span class="metric-label">Nadir GFM</span>
+        <strong class="metric-value" id="metric-nadir">49,40 Hz</strong>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Error angular GFL</span>
+        <strong class="metric-value" id="metric-phase">35°</strong>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Corriente GFM</span>
+        <strong class="metric-value" id="metric-current">1,06 pu</strong>
+      </div>
+    </section>
+
+    <figure class="visual-stage" aria-labelledby="visual-caption" data-model-class="reduced-order" data-evidence-type="E">
+      <div class="visual-grid">
+        <svg id="phasor-svg" viewBox="0 0 320 280" role="img" aria-labelledby="phasor-title phasor-desc">
+          <title id="phasor-title">Fasores de tensión y corriente después del evento</title>
+          <desc id="phasor-desc">Comparación del fasor de tensión de red, el fasor interno GFM y el fasor de corriente GFL.</desc>
+          <circle class="phasor-circle" cx="145" cy="135" r="92"></circle>
+          <line class="axis" x1="35" y1="135" x2="255" y2="135"></line>
+          <line class="axis" x1="145" y1="25" x2="145" y2="245"></line>
+          <line id="phasor-grid" class="phasor-grid" x1="145" y1="135" x2="237" y2="135"></line>
+          <line id="phasor-gfm" class="phasor-gfm" x1="145" y1="135" x2="232" y2="135"></line>
+          <line id="phasor-gfl" class="phasor-gfl" x1="145" y1="135" x2="220" y2="135"></line>
+          <text class="phasor-label" x="32" y="266">Fasores al final del evento</text>
+          <text id="label-gfm" class="axis-label" x="226" y="116">E GFM</text>
+          <text id="label-gfl" class="axis-label" x="220" y="158">I GFL</text>
+          <text class="axis-label" x="238" y="130">V red</text>
+        </svg>
+
+        <svg id="response-svg" viewBox="0 0 620 330" role="img" aria-labelledby="response-title response-desc">
+          <title id="response-title">Respuesta temporal de frecuencia GFM y error angular GFL</title>
+          <desc id="response-desc">Dos gráficos alineados entre cero y cinco segundos, con un escalón de carga al segundo uno.</desc>
+          <line class="grid-line" x1="58" y1="42" x2="594" y2="42"></line>
+          <line class="grid-line" x1="58" y1="153" x2="594" y2="153"></line>
+          <line class="grid-line" x1="58" y1="207" x2="594" y2="207"></line>
+          <line class="grid-line" x1="58" y1="302" x2="594" y2="302"></line>
+          <line class="event-line" x1="165" y1="30" x2="165" y2="305"></line>
+          <text class="axis-label" x="58" y="22">Frecuencia GFM (Hz)</text>
+          <text class="axis-label" x="58" y="192">Error de fase GFL (°)</text>
+          <text class="axis-label" x="146" y="322">evento</text>
+          <text class="axis-label" x="42" y="157">mín.</text>
+          <text class="axis-label" x="31" y="211">180</text>
+          <text class="axis-label" x="40" y="307">0</text>
+          <text class="axis-label" x="58" y="322">0 s</text>
+          <text class="axis-label" x="574" y="322">5 s</text>
+          <path id="frequency-path" class="series-frequency" d=""></path>
+          <path id="phase-path" class="series-phase" d=""></path>
+          <text id="frequency-end-label" class="plot-label" x="500" y="70">49,8 Hz</text>
+          <text id="phase-end-label" class="plot-label" x="500" y="238">estable</text>
+        </svg>
+      </div>
+      <figcaption id="visual-caption" class="legend">
+        <span><span class="swatch swatch-frequency"></span>Frecuencia sostenida por el GFM</span>
+        <span><span class="swatch swatch-phase"></span>Error de sincronización del GFL</span>
+      </figcaption>
+      <p class="status-line" id="status-line" aria-live="polite"><strong>Lectura:</strong> ejecuta el evento para evaluar el punto de operación.</p>
+    </figure>
+
+    <div class="content-grid">
+      <section>
+        <h2>Objetivo de control</h2>
+        <p><span class="evidence-tag">N</span> NERC define el GFM por mantener un fasor interno de tensión casi constante en la escala subtransitoria/transitoria. El GFL prioriza un fasor de corriente y ajusta P/Q sobre una referencia externa.</p>
+      </section>
+      <section>
+        <h2>Lo que cambia en red débil</h2>
+        <p><span class="evidence-tag">R</span> Al reducirse la fortaleza, la sincronización basada en PLL puede interactuar con la red. El gráfico angular usa una ecuación reducida para mostrar cuándo deja de existir un punto fijo de fase.</p>
+      </section>
+      <section>
+        <h2>Límite físico</h2>
+        <p><span class="evidence-tag">N</span> Ser GFM no elimina límites de corriente, energía o tensión. Al saturarse el convertidor, su respuesta depende de la lógica OEM y debe verificarse con modelo EMT y pruebas.</p>
+      </section>
+    </div>
+
+    <details>
+      <summary>Modelo, ecuaciones y fuentes</summary>
+      <p>La frecuencia usa un modelo agregado tipo swing con droop. Es útil para observar inercia, amortiguamiento y error estacionario, pero no representa PWM, controles internos, secuencias ni protección.</p>
+      <code class="equation">2H · d(Δfpu)/dt = Pcontrol − ΔPload − D · Δfpu</code>
+      <code class="equation">Tcontrol · dPcontrol/dt = −Δfpu/Rdroop − Pcontrol</code>
+      <p>La sincronización GFL usa una ecuación no lineal reducida. Si el forzamiento excede el acoplamiento, no existe equilibrio de fase en este modelo.</p>
+      <code class="equation">dδ/dt = Δωevent − Ksync(SCR) · sin(δ)</code>
+      <ul>
+        <li><a href="../../Markdown/01_Fundamentos_GFM_GFL_y_Microredes/2023_NERC_Grid_Forming_Functional_Specifications_for_BPS_Connected_BESS.md">NERC 2023 — Grid Forming Functional Specifications for BESS</a>.</li>
+        <li><a href="../../Markdown/01_Fundamentos_GFM_GFL_y_Microredes/10)%20Review%20on%20grid-forming%20converter%20control%20methods%20in%20high-proportion%20renewable%20energy%20power%20systems.md">Revisión de métodos de control GFM</a>.</li>
+        <li><a href="../../Markdown/01_Fundamentos_GFM_GFL_y_Microredes/5)%20A_Review_of_Current_Limiting_Control_of_Grid_Forming_Inverters_Under_Symmetrical_Disturbances.md">Revisión de limitación de corriente GFM</a>.</li>
+      </ul>
+    </details>
+
+    <nav class="page-nav" aria-label="Navegación entre módulos">
+      <a class="btn" href="index.html">← Mapa maestro</a>
+      <span class="btn" aria-disabled="true">Siguiente: Arquitectura y BoD</span>
+    </nav>
+  </main>
+
+  <script src="shared.js"></script>
+  <script src="fundamentos.js"></script>
+</body>
+</html>
