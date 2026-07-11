@@ -2,6 +2,15 @@
   "use strict";
 
   const STORAGE_KEY = "gfm-learning-state-v1";
+  const THEME_KEY = "gfm-learning-theme-v1";
+  const THEMES = [
+    { value: "system", label: "Sistema" },
+    { value: "dark", label: "Oscuro" },
+    { value: "light", label: "Claro" },
+    { value: "ocean", label: "Océano" },
+    { value: "sage", label: "Salvia" },
+    { value: "sunset", label: "Atardecer" }
+  ];
   const DEFAULT_STATE = {
     schemaVersion: "1.2.0",
     profile: "complete",
@@ -174,12 +183,87 @@
     });
   }
 
+  function readTheme() {
+    try {
+      const stored = localStorage.getItem(THEME_KEY);
+      return THEMES.some((theme) => theme.value === stored) ? stored : "system";
+    } catch (error) {
+      return "system";
+    }
+  }
+
+  function systemIsDark() {
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+
+  function applyTheme(theme) {
+    const normalized = THEMES.some((item) => item.value === theme) ? theme : "system";
+    document.documentElement.dataset.theme = normalized;
+    document.documentElement.style.colorScheme = ["dark", "ocean"].includes(normalized) || (normalized === "system" && systemIsDark()) ? "dark" : "light";
+    return normalized;
+  }
+
+  function setTheme(theme) {
+    const normalized = applyTheme(theme);
+    try {
+      localStorage.setItem(THEME_KEY, normalized);
+    } catch (error) {
+      // Private browsing can deny localStorage; the current page still changes theme.
+    }
+    window.dispatchEvent(new CustomEvent("gfm-theme-change", { detail: { theme: normalized } }));
+    return normalized;
+  }
+
+  function installThemeControl() {
+    const header = document.querySelector(".site-header");
+    if (!header || document.querySelector(".theme-control")) return;
+    const host = header.querySelector(".hero-insight, .header-meta") || header;
+    const wrapper = document.createElement("div");
+    wrapper.className = "theme-control";
+    const label = document.createElement("label");
+    label.htmlFor = "theme-select";
+    label.textContent = "Tema";
+    const select = document.createElement("select");
+    select.id = "theme-select";
+    select.setAttribute("aria-label", "Elegir tema visual");
+    THEMES.forEach((theme) => {
+      const option = document.createElement("option");
+      option.value = theme.value;
+      option.textContent = theme.label;
+      select.appendChild(option);
+    });
+    select.value = readTheme();
+    select.addEventListener("change", () => setTheme(select.value));
+    wrapper.append(label, select);
+    host.appendChild(wrapper);
+  }
+
+  applyTheme(readTheme());
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", installThemeControl, { once: true });
+  } else {
+    installThemeControl();
+  }
+  const mediaQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+  if (mediaQuery && mediaQuery.addEventListener) {
+    mediaQuery.addEventListener("change", () => {
+      if (readTheme() === "system") {
+        applyTheme("system");
+        window.dispatchEvent(new CustomEvent("gfm-theme-change", { detail: { theme: "system" } }));
+      }
+    });
+  }
+
   window.GFMApp = {
     storageKey: STORAGE_KEY,
+    themeKey: THEME_KEY,
+    themes: THEMES,
     defaultState: clone(DEFAULT_STATE),
     getState,
     setState,
     update,
-    markComplete
+    markComplete,
+    readTheme,
+    setTheme
   };
 })();

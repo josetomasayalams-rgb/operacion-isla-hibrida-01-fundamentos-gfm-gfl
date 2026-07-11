@@ -22,7 +22,8 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme]),
+  :root[data-theme="system"] {
     --background: #101613;
     --foreground: #edf3ef;
     --card: #18201c;
@@ -42,6 +43,98 @@
     --series-4: #d2a0cd;
     --shadow: 0 12px 36px rgba(0, 0, 0, 0.28);
   }
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #101613;
+  --foreground: #edf3ef;
+  --card: #18201c;
+  --card-foreground: #edf3ef;
+  --muted: #26312b;
+  --muted-foreground: #aebcb5;
+  --border: #39483f;
+  --primary: #bce3d5;
+  --primary-foreground: #132019;
+  --accent: #243b33;
+  --accent-foreground: #d9eee6;
+  --destructive: #ff9c8d;
+  --ring: #86ccb8;
+  --series-1: #6fd2b7;
+  --series-2: #e7a667;
+  --series-3: #9aabe8;
+  --series-4: #d2a0cd;
+  --shadow: 0 12px 36px rgba(0, 0, 0, 0.28);
+}
+
+:root[data-theme="ocean"] {
+  color-scheme: dark;
+  --background: #0c1826;
+  --foreground: #edf7ff;
+  --card: #13263a;
+  --card-foreground: #edf7ff;
+  --muted: #203a51;
+  --muted-foreground: #aac4d8;
+  --border: #31506b;
+  --primary: #73d4e5;
+  --primary-foreground: #09202d;
+  --accent: #1d4056;
+  --accent-foreground: #d7f5fb;
+  --destructive: #ff9f92;
+  --ring: #73d4e5;
+  --series-1: #65d5b4;
+  --series-2: #f1b46d;
+  --series-3: #9fb6ff;
+  --series-4: #dfa8dc;
+  --shadow: 0 12px 36px rgba(0, 0, 0, 0.32);
+}
+
+:root[data-theme="sage"] {
+  color-scheme: light;
+  --background: #f2f7f1;
+  --foreground: #193027;
+  --card: #ffffff;
+  --card-foreground: #193027;
+  --muted: #e2eee2;
+  --muted-foreground: #587267;
+  --border: #c3d6c7;
+  --primary: #2f8062;
+  --primary-foreground: #ffffff;
+  --accent: #d9eee0;
+  --accent-foreground: #20563f;
+  --destructive: #aa4437;
+  --ring: #4d9e7b;
+  --series-1: #2f8062;
+  --series-2: #bd702e;
+  --series-3: #6177b6;
+  --series-4: #925b91;
+  --shadow: 0 12px 36px rgba(25, 48, 39, 0.09);
+}
+
+:root[data-theme="sunset"] {
+  color-scheme: light;
+  --background: #fff7f0;
+  --foreground: #382321;
+  --card: #fffdfb;
+  --card-foreground: #382321;
+  --muted: #f4e5dc;
+  --muted-foreground: #765b52;
+  --border: #e2cfc4;
+  --primary: #a84f46;
+  --primary-foreground: #ffffff;
+  --accent: #f6ded1;
+  --accent-foreground: #71372f;
+  --destructive: #a83c35;
+  --ring: #d17a64;
+  --series-1: #2b8775;
+  --series-2: #c06a35;
+  --series-3: #6a72b3;
+  --series-4: #9c5a8f;
+  --shadow: 0 12px 36px rgba(100, 55, 40, 0.1);
 }
 
 * {
@@ -157,6 +250,34 @@ h3 {
   display: block;
   color: var(--foreground);
   font-weight: 500;
+}
+
+.theme-control {
+  display: grid;
+  grid-template-columns: auto minmax(120px, 1fr);
+  gap: 8px;
+  align-items: center;
+  margin-top: 14px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+
+.theme-control label {
+  color: var(--muted-foreground);
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.theme-control select {
+  min-height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--background);
+  color: var(--foreground);
+  padding: 6px 8px;
+  font-size: 0.82rem;
 }
 
 .toolbar,
